@@ -1,0 +1,47 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage[english]{babel}
+\usepackage[nottoc]{tocbibind}
+
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{tikz-cd}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{exmp}[thm]{Example}
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}[section]
+
+\title{
+	{Proving some things in combinatorial group theory}\\
+	{\large Indian Institute of Science}\\
+	{\includegraphics[scale=0.5]{IIsc_logo.jpg}}
+}
+\author{Sayantan Khan}
+\date{July 2015}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\chapter{A Primer on Combinatorial Group Theory}
+\input{chapters/chapter01.tex}
+
+\chapter{Some more group theory}
+\input{chapters/chapter02.tex}
+
+\bibliographystyle{amsplain}
+\bibliography{references}
+
+\end{document}
