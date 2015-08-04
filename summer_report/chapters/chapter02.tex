@@ -79,20 +79,22 @@ A commutator of two elements $a$ and $b$ of a group is the element $a^{-1}b^{-1}
 The abelianization of a group $G$ is the group $Q$ obtained by taking the quotient of $G$ with the commutator of every pair of elements in $G$. The quotient group $Q$ is abelian.
 \end{defn}
 
-\begin{lem}
-The group presented by $\langle B ; R \rangle$, where $R$ is composed of the commutators of all possible pairs in $B$, the free abelian group with basis $B$
+\begin{lem}\label{commu}
+Consider a word in the commutator subgroup of some free group. Let the word be of $w_1abw_2$, where $a$ and $b$ are single letters and $w_1$ and $w_2$ are sub-words (possibly empty). Then the word $w_1baw_2$ is also in the commutator subgroup.
 \end{lem}
 
 \begin{proof}
-The quotient group of formed by quotienting the free group on $B$ by the normal closure of $R$ is certainly abelian. Also, any single letter word in $\mathbb{F}_B$ does not fall in the identity coset, so no single letter word maps to the identity in the quotient group. And since we have a function defined from $B$ to some abelian group $G$, we can extend it linearly to get a homomorphism. The homomorphism has to be unique because we can't get two distinct homomorphisms that agree on the generating set.
+If we show that one can reach $w_1baw_2$ from $w_1abw_2$ by just using conjugation and product with commutators, we will be done, since the commutator subgroup is a normal subgroup. Consider this sequence of operations: first conjugate by $w_1$, so the word looks like $w_1^{-1}w_1abw_2w_1$, or the reduced form is $abw_2w_1$. Next multiply by the commutator $bab^{-1}a^{-1}$. This gives the word $baw_2w_1$. Now conjugate by $w_1^{-1}$, so one gets $w_1baw_2$, which is what one wanted.
 \end{proof}
 
-\begin{lem}
+This proof shows that transposing two adjacent letters in a word of the commutator subgroup results in a word that is still in the commutator subgroup. Since every permutation is the product of adjacent transposition, a permutation of any element of the commutator subgroup is still in the commutator subgroup. This means that all the words for which the sum of exponent of each letter is zero is part of the commutator subgroup. And for any word in which the sum of exponents of some letter is not zero, it can be shown that it is a coset of the commutator subgroup. Hence, the commutator subgroup is the set of all words in which the sum of exponents of all the letters is zero.
+
+\begin{lem}\label{stuck}
 The abelianization of the free group on a set $X$ is isomorphic to the free abelian group on $X$.
 \end{lem}
 
 \begin{proof}
-Let $F$ be the free group on $X$, and let $FA$ be the free abelian group on $X$. Consider the inclusion map $\phi_1$ from $X$ to $F$ and the inclusion map $\phi_2$ from $FA$. And consider the map $q$ which takes $F$ to its quotient $Ab$ by the commutator subgroup $h$. The map $\phi_2$ extends uniquely to a homomorphism $a$ from $F$ to $FA$. The composite map $q \circ \phi_1$ extends uniquely to a homomorphism from $FA$ to $Ab$. Clearly, $h$ is a subset of the kernel of $a$, since the map of any commutator to an abelian group is identity. Now we just need to show that any element in the kernel belongs to the commutator subgroup $h$. 
+Let $F$ be the free group on $X$, and let $FA$ be the free abelian group on $X$. Consider the inclusion map $\phi_1$ from $X$ to $F$ and the inclusion map $\phi_2$ from $FA$. And consider the map $q$ which takes $F$ to its quotient $Ab$ by the commutator subgroup $h$. The map $\phi_2$ extends uniquely to a homomorphism $a$ from $F$ to $FA$. The composite map $q \circ \phi_1$ extends uniquely to a homomorphism from $FA$ to $Ab$. Clearly, $h$ is a subset of the kernel of $a$, as a consequence of lemma \autoref{commu}. Now we just need to show that any element in the kernel belongs to the commutator subgroup $h$. Consider some word $w$ that does not belong to the commutator subgroup. Then, collecting all the letters whose exponents do not sum to $0$ in the word will give us a word of the form $a_1^{n_1}a_2^{n_2}\ldots a_k^{n_k}$, where $a_i$s are distinct and none of the exponents are $0$. The image of this word in $a$ is clearly not identity, which shows that the commutator subgroup is the kernel of $a$. By the first isomorphism theorem, $FA \cong Ab$.
 \end{proof}
 
 \begin{lem}
@@ -118,7 +120,7 @@ If two free groups are isomorphic, with the cardinality of their bases being at 
 \end{thm}
 
 \begin{proof}
-One begins by abelianizing the free groups, so one gets isomorphic free abelian groups on the same basis. And since free abelian groups are isomorphic to $\mathbb{Z}$-modules, one gets a pair of isomorphic $\mathbb{Z}$-modules. All we need to do now is show their bases have the same cardinality because abelianization does not change the cardinality of the basis. Let $f$ be the isomorphism between the modules $z_1$ and $z_2$. Let $b_1$ be the basis of $z_1$ and $b_2$ of $z_2$. The image of $z_1$, $f(z_1)$ is also a basis for $z_2$. Now we have two bases for $z_2$, and both their cardinalities are at most $\aleph_0$. Hence, they must have the same cardinality. This shows the isomorphic free groups have bases with same cardinalities.
+One begins by abelianizing the free groups, so one gets isomorphic free abelian groups on the same basis. This is true because \autoref{stuck}. And since free abelian groups are isomorphic to $\mathbb{Z}$-modules, one gets a pair of isomorphic $\mathbb{Z}$-modules. All we need to do now is show their bases have the same cardinality because abelianization does not change the cardinality of the basis. Let $f$ be the isomorphism between the modules $z_1$ and $z_2$. Let $b_1$ be the basis of $z_1$ and $b_2$ of $z_2$. The image of $z_1$, $f(z_1)$ is also a basis for $z_2$. Now we have two bases for $z_2$, and both their cardinalities are at most $\aleph_0$. Hence, they must have the same cardinality. This shows the isomorphic free groups have bases with same cardinalities.
 \end{proof}
 
 \begin{thm}\cite{meier}
@@ -181,6 +183,8 @@ This lemma will be left unproven, as we'll need to take a long digression into t
 \begin{lem}[Nielsen-Schreier Theorem]\label{subg}
 A subgroup of a free group is free.
 \end{lem}
+
+This lemma will be left unproven as the author has absolutely no idea how to prove it.
 
 \begin{lem}\label{impo}
 Two elements $a$ and $b$ of a free group commute with each other iff both $a$ and $b$ are perfect powers of some element $x$.
