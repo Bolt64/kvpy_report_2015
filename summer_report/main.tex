@@ -1,17 +1,15 @@
-\documentclass[12pt]{report}
+\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \graphicspath{ {images/} }
+
 \usepackage[english]{babel}
 \usepackage[nottoc]{tocbibind}
 
 \usepackage{hyperref}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{amsthm}
-\usepackage{tikz-cd}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
 \newtheorem{thm}{Theorem}[section]
 \newtheorem{lem}[thm]{Lemma}
 \newtheorem{prop}[thm]{Proposition}
@@ -22,11 +20,7 @@
 \theoremstyle{definition}
 \newtheorem{defn}{Definition}[section]
 
-\title{
-	{Proving some things in combinatorial group theory}\\
-	{\large Indian Institute of Science}\\
-	{\includegraphics[scale=0.5]{IIsc_logo.jpg}}
-}
+\title{A study of elementary Combinatorial Group Theory}
 \author{Sayantan Khan}
 \date{July 2015}
 
@@ -35,13 +29,568 @@
 
 \tableofcontents
 
-\chapter{A Primer on Combinatorial Group Theory}
-\input{chapters/chapter01.tex}
+\section{Motivation and a little history}
 
-\chapter{Some more group theory}
-\input{chapters/chapter02.tex}
+Groups, as an abstract notion worthy of interest, arose just like all other abstractions in mathematics, i.e. when mathematicians pulled back from solving specific problems, and asked themselves: what do permutations of a set, isometries\footnote{Isometries are transformations that preserve distance between any pair of points, like reflection or translation} of the plane and modular integers have in common. There were three things that stood out: one, these `objects' could be combined or composed to create new objects, two, there existed an object, which when combined with any other object resulted in the same object, unchanged, and finally, all these objects were reversible. For example, the composition of two permutations is yet another permutation, composition of any permutation with the permutation which does not move anything gives one the original permutation back, and finally, every permutation can be reversed.\\
+But that's not all that one needs needs to motivate mathematicians to study this abstraction, unless they are studying these for their own sake. As much as mathematicians claim intellectual purity, and the pursuit of knowledge for its own sake, they are motivated to study something outside their sub-discipline only if it has some application in their sub-discipline, and that's usually demonstrated by solving some long standing open problem using the new theory or abstraction.\\
+The study of groups, as these particular abstractions were called, needed to prove its worth in this manner, by solving some long standing open problem, which would give it the push it needed to enter mainstream mathematics. That push came in the form of a problem, which asked whether a polynomial equation in one variable with degree $5$ or higher could be solved using radicals. The answer for lower degrees was known, but the collective failure of the mathematical community to find an answer for degree $5$ led people to speculate that it was not really not possible to do so. That conjecture however, needed a proof. The proof came about in 1823 and made the extensive use of group theory. That more or less put group theory in mathematical limelight, and set its place in mainstream mathematics for years to come.\\
+In the following years, once group theory was comfortably in mainstream mathematics, various specializations came in. Two specializations, geometric group theory and combinatorial group theory came about by studying the geometric aspects of groups in the first case, and applying techniques from combinatorics in the second case. These two sub-disciplines had an impact in the study of topology and mathematical logic, two widely disparate fields.
 
-\bibliographystyle{amsplain}
+\section{Some preliminary notions}
+
+\begin{defn}
+A group $(G, \circ)$ is a set $G$ along with an associated binary operation $\circ$ called multiplication, such that it satisfies the following axioms:
+\begin{itemize}
+\item If $a$ and $b$ belong to $G$, then $a \circ b$ also belongs to $G$. (Closure axiom)
+\item Multiplication is associative, i.e. if $a$, $b$ and $c$ belong to $G$, then $a \circ (b \circ c) = (a \circ b) \circ c$. (Associativity axiom)
+\item There exists an element $e$ in the group, called identity, such that for all $a \in G$, $a \circ e = e \circ a = a$. (Existence of identity)
+\item For every element $a \in G$, there exists an element $b$, called the inverse of $a$, such that $a \circ b = b \circ a = e$ (Existence of inverse)
+\end{itemize}
+\end{defn}
+
+\begin{defn}
+A subgroup $(S, \circ)$ of a group $(G, \circ)$, is a subset $S$ of the set $G$, which is a group under the operation $\circ$.
+\end{defn}
+
+It trivially follows from the axioms that the identity element is unique, and an element has a unique inverse. Now for some examples:
+
+\begin{exmp}
+\label{int}
+The set of integers $\mathbb{Z}$ under the operation of addition is a group.
+\end{exmp}
+
+\begin{exmp}
+\label{int_mod}
+The set of integers $\mathbb{Z}$ under the operation of addition modulo some positive integer $n$ is a group. It is denoted by the symbol $\mathbb{Z}/n\mathbb{Z}$
+\end{exmp}
+
+\begin{defn}
+A homomorphism is a mapping $\phi$ from a group $(G, \circ)$ to another group $(G', *)$ such that it preserves the group structure, or in other words, for any $a,b \in G$, $\phi(a \circ b) = \phi(a) * \phi(b)$.
+\end{defn}
+
+\begin{exmp}
+Consider the mapping $\phi$ from $\mathbb{Z}$ to $\mathbb{Z}/7\mathbb{Z}$, such that $\phi(x) = x (\mod 7)$. Clearly, this is a homomorphism.
+\end{exmp}
+
+\begin{defn}
+An isomorphism between $G$ and $G'$ is a homomorphism which is one-one and onto. If an isomorphism exists between two groups, they are said to be isomorphic.
+\end{defn}
+
+For all practical purposes, two isomorphic groups are same in every aspect, so it's common to treat isomorphic groups as equivalent.
+
+\section{Presentations}
+
+One of the problems one immediately faces is how to represent groups. The groups mentioned in the example were nice, in the sense that they deal with sets that are familiar to most people. However, for any arbitrary group, representing them compactly might be a problem. One way of representing a group, or at least a finite group, is to write out its multiplication table, that is, for every possible ordered pair, write out their product. This method works, but only for finite groups, and even this grows cumbersome after the group exceeds a certain size.
+
+One way to improve upon this is to note that a multiplication table has a lot of redundant information, information that can be deduced by just using the algebraic structure of the group. For example, if an entry in the table is of the form $a^3 \circ a^4 = b$, then one can immediately deduce from the associativity axiom that $a^2 \circ a^5 = b$, $a \circ a^6 = b$ and so on. Before we can try and answer that question, we'll need to define a few terms. \cite{johnson}
+
+\begin{defn}
+A subset $S$ of a group $(G, \circ)$ is said to generate $G$ if every member of $G$ can be written as the product of powers of elements of $S$.
+\end{defn}
+
+Notice that in both examples, Example \autoref{int} and Example \autoref{int_mod}, the set $S = \{1\}$ generates the whole group. But in the second example, there is an additional condition that $1^n=0$ which is not there in the first example. Now consider a singleton set $T = \{a\}$ and the group $H$ generated by it. Since $H$ is generated by $T$, every element of $H$ is of the form $a^p$ for some integer $p$. Now, if $H$ is finite, we can, by Pigeonhole principle, find a non negative $q$ such that $a^q=e$. Otherwise, $H$ is infinite and isomorphic to $\mathbb{Z}$. Here's a formal proof:
+
+\begin{thm}
+\label{class1}
+If $H$ is a group generated by the singleton set $S = \{a\}$, then $H$ is either isomorphic to $\mathbb{Z}$ or $\mathbb{Z}/q\mathbb{Z}$, where $q$ is a nonnegative integer.
+\end{thm}
+
+\begin{proof}
+We can split the proof into two cases, when $H$ is finite, and when it's infinite.
+\begin{enumerate}
+\item If $H$ is finite, there exists a positive integer (it can't be $0$, because a group has at least one element) $q$, which is the size or the order of the group. Consider the sequence $A = \{a^0, a^1, a^2 \cdots , a^q\}$. Since we have $q+1$ elements, but the group only has $q$ distinct objects, by the pigeonhole principle, at least two objects must be identical. Let them be $a^m$ and $a^n$ ($m>n$). Let $p=m-n$ (it follows that $q \geq p$). Then, $a^p=e$. And consequently $a^l = a^{l \mod p}$. Since, we can have at most $p$ distinct elements modulo $p$, the group can have at most $p$ elements. This implies $p \geq q$. And following from the last inequality, we get $p=q$. From this we conclude that $a^q=e$, and for all positive integer $l$ less than $q$, $a^l \neq e$. Now we can construct an isomorphism with $\mathbb{Z}/q\mathbb{Z}$. We can now confidently say that there is a unique way of writing every element of $H$ in the form $a^l$, where $0 \leq l < q$. Let the mapping be $f(a^l) = l$ where $l$ varies from $0$ to $q-1$. Since, the kernel of $f$ is just $\{e\}$ and the range is all of $\mathbb{Z}/q\mathbb{Z}$, $f$ is an isomorphism. Hence, if $H$ is finite, it is isomorphic to $\mathbb{Z}/q\mathbb{Z}$.
+
+\item If $H$ is infinite, there can't exist any positive integer $q$ such that $a^q=e$, otherwise the group would have at most $q$ elements, and that would mean its order was finite. This also implies that if $a^m = a^n$, then $n=m$. This means that there is a unique way of writing every element of $H$ in the form $a^l$, where $l \in \mathbb{Z}$. Consider the mapping $f$ such that $f(a^l)=l$. Clearly, this is onto on $\mathbb{Z}$ and it's also one-one. Hence $f$ is an isomorphism. Ergo, $H$ is isomorphic to $\mathbb{Z}$ if $H$ is infinite.
+\end{enumerate}
+Hence, we have managed to classify all the groups generated by a singleton set up to isomorphism.
+\end{proof}
+
+We have managed to make a little progress on our goal of compressing information about a group. For example, the group $\mathbb{Z}/q\mathbb{Z}$ is completely represented by the information that it is generated by a singleton set and it is of the order $q$. Let's introduce a new notation to represent this information. We can represent the group in the following manner:
+$$\mathbb{Z}/q\mathbb{Z} = \langle a;a^q=e \rangle$$
+Further on, we can get rid of the trailing ``$=e$" and just write
+$$\mathbb{Z}/q\mathbb{Z} = \langle a;a^q \rangle$$
+We can use the same notation to represent the group $\mathbb{Z}$, writing it down as
+$$\mathbb{Z} = \langle a;\rangle$$
+The notation we used above is called a presentation, with the terms to the left of the semi colon called generators, and the terms to the right are called relations. The generators, as the name suggests, generate the group, or in other words, every element of the group can be written as the product of powers of the generators. There is also no restriction on the generators to be necessarily distinct, so referring to a `set' of generators is an abuse of terminology. The relators consist of \emph{words} which evaluate to identity in the group. 
+\begin{defn}
+Given a set $S$ called the generating set, a word is a finite (possibly empty) sequence $a_{i}^{j}$, where $a_i \in S$, and $j = \pm 1$. A word is reduced if $a_i^{j}$ is never followed by $a_i^{-j}$.
+\end{defn}
+\begin{exmp}
+Given a generator set $S = \{a,b\}$, $aba^{-1}b^{-1}$ is a reduced word, but $abb^{-1}a^{-1}$ is not a reduced word.
+\end{exmp}
+
+If a word is not reduced it's possible to reduce it simply by iterating over the `letters' in the word, and at the first occurrence of a letter being followed by its inverse letter, deleting both the letters from the word, and starting the process all over again until one has a reduced word. Two words are considered equivalent if they can be converted from one to the other just by either deleting adjacent inverse letters, or inserting pairs of adjacent inverse letters somewhere in the word. One can define the operation of multiplication on words as well. The product of two words is just concatenation of their sequence of letters together. And similarly, one defines the formal inverse of a word as the sequence of letters of the word taken in reverse, and the exponent on them inverted.
+
+\begin{lem}
+Inserting or deleting adjacent pair of inverse letters does not change the reduced form of the word.
+\end{lem}
+
+\begin{proof}
+The proof has two parts: showing the statement is true for insertions, and the showing it's true for deletions:
+\begin{description}
+\item[Insertion] Let the pair of inverse letters $aa^{-1}$ be inserted somewhere in the word. The new word can be broken up in 3 subwords, the subword preceding the insertion point, the subword $aa^{-1}$ and the subword following the insertion point. The preceding subword will get reduced in the same manner as it did in the original word, with two possible cases arising: either the last letter of the subword is $a^{-1}$; in that case, that will get reduced with the first $a$ of the second subword, and the $a^{-1}$ of the second subword will get concatenated to the first reduced subword. Note that it can't reduced any further, otherwise the first reduced subword would have not have $a^{-1}$ in the trailing position. Finally, the last subword will get reduced like it did in the original word, and we'll get the original reduced word back. In the other case where the first subword does not end with $a^{-1}$, the middle subword will get reduced to the empty word and we'll get back the original word again.
+\item[Deletion] Assume the pair to get deleted to be $aa^{-1}$. Split the shorter word into two subwords, the one preceding the deletion point and the one following. Two cases can arise again, either the preceding word had a trailing $a^{-1}$, or not. If it didn't the deleted pair $aa^{-1}$ would have gotten deleted anyway during the reduction, so the reduced word remains the same. If the preceding word did have a trailing $a^{-1}$, then that would get reduced with the leading $a$ of the deleted subword, leaving a trailing $a^{-1}$, and that would lead to the same reduced word. 
+\end{description}
+Hence, inserting or deleting adjacent pairs of inverse letters does not change the reduced form.
+\end{proof}
+
+\begin{exmp}
+Let $W_1$ be the word $ab$ and $W_2$ be the word $b^{-1}a$. The product word $W_1W_2$ is $abb^{-1}a$ and $W_1^{-1}$ is $b^{-1}a^{-1}$.
+\end{exmp}
+And since we have defined an equivalence relation on the words, we can partition the set of words $W$ generated by a set $S$, we can partition $W$ into equivalence classes. Additionally, a group structure can be imposed on the partition classes as we'll do in \autoref{freegroups}.
+
+The relators in a presentation therefore determine how the various generators interact with each other. For example, if $aba^{-1}b^{-1}$ was one of the relators in a group generated by just $\{a,b\}$, that would imply $ab=ba$, or the group was abelian. But given our current definition of a presentation as a tuple of generators and relators, it can be shown that most presentations do not specify a unique group (up to isomorphism). We need a more rigorous notion of what a presentation is.
+
+\section{Free Groups}\label{freegroups}
+Before we formalize the notion of a presentation of a group, we need to define free groups. There are many ways of defining or constructing free groups, from formal algebraic methods, to more geometric methods using infinite trees\cite{meier}. The technique we'll use here to define free groups imitates how fundamental groups of topological spaces are defined. Before we define a free group, here's a lemma we'll need.
+
+\begin{lem}\label{well_def}
+If two words $a_1$ and $a_2$ are equivalent, and the words $b_1$ and $b_2$ are equivalent, then $a_1b_1$ is equivalent to $a_2b_2$.
+\end{lem}
+
+\begin{proof}
+Let $S$ be the generating set of $a_1$, $a_2$, $b_1$ and $b_2$. If $c$ is an element of $S$, then inserting $cc^{-1}$ or $c^{-1}c$ somewhere in a word does not change its equivalence class. Conversely, deleting a pair of adjacent inverse letters does not change the equivalence class of the word either. Also, these two operations are reversible and are each other's inverse. Saying that $a_1$ and $a_2$ are equivalent means that they reduce to the same reduced word, which means there's a sequence of finite moves consisting of all the deletions that lead from $a_1$ to $a_{reduced}$ and then a finite sequence of insertions, which are the inverses of the deletions that lead from $a_2$ to $a_{reduced}$. Similarly, there exist a finite sequence of moves that leads from $b_1$ to $b_2$. Applying those moves on $a_1b_1$, we reach $a_2b_2$, which shows $a_1b_1 \equiv a_2b_2$.
+\end{proof}
+
+\begin{defn}
+A free group on the set $S$ is defined to be the set of equivalence classes on the set of words generated by the set $S$, with identity being the equivalence class of the empty word, and group multiplication of classes $A$ and $B$ being the equivalence class of the product $ab$, where $a \in A$ and $b \in B$. In other words:
+$$A \circ B = [a \cdot b]$$
+And inverse of a class $A$ is the equivalence class of the inverse of $a$, where $a \in A$.
+\end{defn}
+By lemma \autoref{well_def}, the multiplication and inverse are well defined.
+
+Using just this definition, one can go about proving properties of free groups. Here's a simple example of such a property:
+
+\begin{prop}\label{double}
+If $\alpha$ is an element of a free group $G$ and $\alpha^2=e$, where $e$ is the identity, then $\alpha=e$.
+\end{prop}
+
+\begin{proof}
+Let $a$ be the reduced word belonging to the equivalence class $\alpha$. $aa$ then belongs to the equivalence class $\alpha^2$. But $\alpha^2=e$, which means that $aa$ is equivalent to the empty word. Since $a$ is reduced, but $aa$ reduces to the empty word, the only place reduction can happen is between the end of the first $a$ and the beginning of the second $a$. Now assume that $a$ is non empty. This means $a[m] = a[n-m-1]$, where $a[m]$ represents the $m^{th}$ letter of $a$ (starting from $0$) and $n$ is the length of $a$. Now $a$ could either have an even number of letters in which case $a\left[\frac{n}{2} -1\right]$ letter is the inverse of the adjacent $a\left[\frac{n}{2}\right]$ letter and those two cancel each other out. This contradicts the fact that $a$ is reduced. Ergo, $a$ must be empty. And if $a$ has an odd number of letters, then the middle letter must be its own inverse, which is not true for any letter in the basis. Hence $a$ can only have an even number of letters and in that case, it's the identity. This completes the proof that $\alpha=e$
+\end{proof}
+
+Using this result, we can prove a slightly stronger result, which is that no power of a non trivial element in a free group is ever trivial.
+
+\begin{prop}
+If $\alpha$ is an element of a free group $G$ and $\alpha^p=e$, where $e$ is the identity and $p$ is a positive integer, then $\alpha=e$.
+\end{prop}
+
+\begin{proof}
+We use the same trick we used in the last proof. Let $a$ be the reduced word from $\alpha$. Then $a^p$ reduces to the empty word, but reduction can only happen where one word is joined to the next, since the word $a$ is reduced. Proceeding by the same arguments as in the last proof, we show that $a$ necessarily must be the empty word, and that concludes the proof. 
+\end{proof}
+
+These theorems also enable us to tell whether something is a free group or not. If some element has a finite order in a group, that group is certainly not a free group, but the converse is not true always. An example without a proof of the latter is the group $\mathbb{Z} \times \mathbb{Z}$. In this group, every element has an infinite order, but the group is not free.
+
+\subsection{On the isomorphisms of free groups\cite{lyndon}}
+\begin{thm}\label{rank}
+If the bases of two free groups are isomorphic (i.e. have the same cardinality) then the groups are isomorphic.
+\end{thm}
+
+\begin{proof}
+Consider a bijective mapping $f$ between the bases $B_1$ and $B_2$ of groups $X$ and $Y$. Extend $f$ to a homomorphism in the following manner:
+$$f(x_1^{e_1}x_2^{e_2} \cdots x_n^{e_n}) = f(x_1)^{e_1}\cdots f(x_n)^{e_n}$$
+where $x_i$s belong to the basis $B_1$. This, by definition is a homomorphism. All we need to show is that it's injective and surjective. Since the whole basis $B_2$ lies in the image of $f$, the homomorphism certainly is surjective. Now all we need to show if that if $f(\alpha)=\mathrm{identity}_{Y}$, then $\alpha=\mathrm{identity}_{X}$. Let $x$ be a word in $\alpha$, then $f(x)$ is a word in $f(\alpha)$. For each reduction we make in $f(x)$, we can make the corresponding reduction in $x$, hence if $f(x)$ reduces to the empty word, so does $x$, which shows the kernel is trivial and $f$ is an isomorphism.
+\end{proof}
+
+The converse, although true, is a little trickier to prove, and little more machinery needs to be developed before it can be proven. See theorem \autoref{conv}.
+
+\section{A digression to quotient groups}
+Before we proceed any further, we'll need a little more `machinery', so to speak. First, we need the notion of a coset of a subgroup.
+
+\subsection{Cosets and quotient groups}
+
+\begin{defn}
+Given a group $G$, a subset $H$, and an element $a \in G$, the left coset $aH$ is defined as the set
+$$aH = \{ah\ |\ h \in H\}$$
+A right coset $Ha$ is defined in a similar manner.
+\end{defn}
+
+\begin{defn}
+A subgroup $H$ of a group is called normal \emph{iff} for all $a \in G$, $Ha = aH$. 
+\end{defn}
+
+\begin{defn}
+A cartesian product of two subsets $A$ and $B$ of a group $G$ is the set
+$$A \times B = \{ab\ |\ a \in A,\ b \in B\}$$
+\end{defn}
+
+This is where the convenient properties of normal subgroups come in. Since the smaller term can commute around the larger subgroup, so to speak, cosets of normal subgroups multiply very nicely.
+
+\begin{exmp}
+If $H$ is a normal subgroup of $G$ and $a$ and $b$ belong to $G$, then 
+$$aH \times bH = Ha \times bH = Hab \times H = abH \times H = ab(H \times H)$$
+But $H \times H$ is just $H$ again, since $H$ is a group. Hence
+$$aH \times bH = abH$$
+\end{exmp}
+
+This example shows that cosets of normal groups multiply nicely and this lend themselves naturally to a group structure.
+
+\begin{defn}
+Given a group $G$ and a normal subgroup $H$, we can define the quotient group $G/H$ whose elements are the cosets of $H$ in $G$, the group multiplication is defined as the cartesian product of cosets. The above example shows the multiplication is associative. The identity element is the set $H$ itself, and the inverse of $aH$ is $a^{-1}H$.
+\end{defn}
+
+\subsection{Some useful theorems\cite{herstein}}
+
+\begin{thm}
+That $H$ is a normal subgroup of $G$ is equivalent to saying that $aHa^{-1}=H$ for all $a \in G$ where the set $aHa^{-1}$ defined as 
+$$aHa^{-1}=\{aha^{-1}\ |\ h \in H\}$$
+\end{thm}
+
+\begin{proof}
+If $H$ is normal in $G$, then for any $a \in G$, $aH=Ha$. Since $aH=Ha$, $(aH)a^{-1}$ is equal to the set $(Ha)a^{-1}$ which reduces to $H$. This shows that if $H$ is normal in $G$, $aHa^{-1}=H$.
+
+Now for the converse. If $aHa^{-1}=H$, then $(aHa^{-1})a = Ha$, but $(aHa^{-1})a = aH$, hence $aH = Ha$.
+\end{proof}
+
+\begin{thm}\label{normal}
+The intersection of two normal subgroups $A$ and $B$ of $G$ is normal in $G$.
+\end{thm}
+
+\begin{proof}
+Let $C = A \cap B$. Clearly $aCa^{-1}$ is a subset of both $A$ and $B$ for all $a \in G$. Hence $aCa^{-1} \subset C$. But if that's true for all $a \in G$, that's true for $a^{-1}$ as well. That means $a^{-1}Ca \subset C$ or $C \subset aCa^{-1}$. Hence $aCa^{-1} = C$ for all $a \in G$ and $C$ is normal. This proof in fact works for any arbitrary number of normal subgroups, even infinitely many.
+\end{proof}
+
+\begin{thm}
+The kernel of a homomorphism $f$ from $G$ to $G'$ is a normal subgroup of $G$.
+\end{thm}
+
+\begin{proof}
+Let the kernel of $f$ be $H$. If we show that $aHa^{-1}=H$ for all $a \in G$, we are done. Consider any $k \in aHa^{-1}$. $k$ is of the form $aha^{-1}$ for some $h \in H$. But $f(k)= f(a) \cdot f(h) \cdot f(a^{-1}) = e$. This shows $k$ is in the kernel of $f$, hence $aHa^{-1} \subset H$. But this is true for any $a \in G$. In particular, take $a^{-1}$. $a^{-1}Ha \subset H$, but that means $H \subset aHa^{-1}$, which proves $aHa^{-1}=H$. This shows the kernel is a normal subgroup.
+\end{proof}
+
+\begin{thm}[First Isomorphism Theorem]
+If $f$ is a homomorphism from $G$, then the image of $f$, $I$ is isomorphic to $G/\mathrm{Ker}(f)$.
+\end{thm}
+
+\begin{proof}
+Let $Q$ represent the quotient group $G/\mathrm{Ker}(f)$ and $H$ the kernel of $f$. Elements of $Q$ are of the form $aH$, where $a$ belongs to $G$. Consider the mapping $\phi$ which maps from $Q$ to $I$ in the following manner: $\phi(aH) = f(a)$. First of all, we need to show that $\phi$ is well defined. Assume that $aH=bH$, $a$ not necessarily distinct from $b$. Clearly, $ah_1=bh_2$ for some $h_1$ and $h_2$ in $H$. $f(ah_1)=f(bh_2)$, but $h_1$ and $h_2$ lie in the kernel, so $f(a)=f(b)$. This shows that the value of $\phi$ only depends upon the element of $Q$ we take, and not the way we represent it. Also, since $H$ is normal, $aH \times bH=abH$. Hence $\phi(aH \times bH) = \phi(ab) = \phi(aH)\phi(bH)$. This shows $\phi$ is a homomorphism. Now to show $\phi$ is surjective, let $i$ be some element of $I$. There exists then some $a \in G$, such that $f(a)=i$. And therefore, $\phi(aH)=i$, which shows that $\phi$ is surjective. And if $f(a)=e$, then $a \in H$. But $aH=H$, which is the identity element of $Q$. This shows $\phi$ is injective. Ergo, $\phi$ must be an isomorphism.
+\end{proof}
+
+
+
+\section{Presentations revisited}
+
+By theorem \autoref{rank}, all free groups generated by a basis of size $n$ are isomorphic, so it makes sense to talk of all them as one, as the free group of rank $n$, or $\mathbb{F}_n$. 
+
+\begin{lem}\cite{meier}\label{quotient}
+If $G$ is a group generated by $n$ elements, then $G$ is isomorphic to a quotient group of $\mathbb{F}_n$
+\end{lem}
+
+\begin{proof}
+Let $B= \{b_1, b_2, \cdots , b_n\}$ be the basis of $\mathbb{F}_n$. Let $S=\{a_1, a_2, \cdots, a_n\}$ be the generating set of $G$. Consider the mapping $f(b_i)=a_i$. Extend this mapping linearly to all of $\mathbb{F}_n$. Since the set $S$ generates $G$, $S$ is the image of $f$. Now, we have a homomorphism from $\mathbb{F}_n$ to $G$, so we can use the first isomorphism theorem and claim that $G \approx \mathbb{F}_n/\mathrm{Ker}(f)$. 
+\end{proof}
+
+\begin{lem}\cite{meier}
+If $R$ is a subset of the group $G$, then there exists a normal subgroup $H$, called the normal closure of $R$ such that if two normal subgroups $A$ and $B$ contain $R$, then they contain $H$.
+\end{lem}
+
+\begin{proof}
+There exists at least one normal subgroup that contains $R$, that is the group $G$ itself. Consider the set $S$ of all normal subgroups of $G$ containing $R$. By the extension of theorem \autoref{normal}, they intersection of all members of $S$ must be normal in $G$, and that subgroup also contains $R$. Furthermore, it satisfies the property the theorem asks for, hence we're done.
+\end{proof}
+
+We are now in a position to define the presentation of a group.
+
+\begin{defn}
+A presentation $P$ is a tuple of a set $S$, and a set of reduced words $R$ from $\mathbb{F}_S$, also called relations. A presentation is represented in the following manner: $\langle S;R\rangle$.
+\end{defn}
+
+\begin{defn}
+A presentation $\langle S;R\rangle$, generates a quotient group $Q$, which is precisely the group $\mathbb{F}_S/N$, where $N$ is the normal closure of $R$.
+\end{defn}
+
+\begin{defn}
+A group $G$ is said to have a presentation $\langle S;R \rangle$ if it is isomorphic to the quotient group generated by the presentation.
+\end{defn}
+
+One question still remains, whether a group actually has a presentation; to be more precise, is every group isomorphic to some quotient of a free group, and that is answered by lemma \autoref{quotient}. 
+
+With that, we have precisely defined what we mean by a presentation. Here are some concrete examples of presentations of groups.
+
+\begin{exmp}
+The group $\mathbb{Z}$ can be presented in the following manner: $\langle a;\rangle$. If no relations are specified, the relation set is taken to be the empty one. Hence, the smallest normal subgroup containing the empty set is just the trivial subgroup $\{e\}$, and the quotient group is just $\mathbb{F}_1/\{e\}$, which is isomorphic to $\mathbb{F}_1$, which was shown before to be isomorphic to $\mathbb{Z}$.
+\end{exmp}
+
+\begin{exmp}
+The group $\mathbb{Z} \times \mathbb{Z}$ is presented in the following manner: $\langle a,b;aba^{-1}b^{-1}\rangle$. Let $N$ be the smallest normal subgroup of $\mathbb{F}_2$ containing $aba^{-1}b^{-1}$. And let $Q$ be the quotient group $\mathbb{F}_2/N$. The elements of $Q$, or the cosets of $N$ are distinguished by a tuple of integers representing the sum of exponents of $a$ and $b$ respectively. To put it in simpler terms, $ab$ and $a^2ba^{-1}$ both belong to the same coset of $N$ because they both have the sum of coefficients of $a$ and $b$ respectively $1$ and $1$. So an element of $Q$ is identified by a tuple of integers, which is the same as $\mathbb{Z} \times \mathbb{Z}$.
+\end{exmp}
+
+\section{Transformations}
+
+\begin{lem}\label{elementary}
+Given a group $G$, and an ordered set of elements of $G$, $\{a_i\}$, then the smallest normal group containing $\{a_i\}$ does not change if $a_i$ is replaced by $a_i^{-1}$, $a_i a_j$, or $a_j a_i$, where $j \neq i$.
+\end{lem}
+
+\begin{proof}
+To prove the theorem, it's sufficient to show that every normal group containing $\{a_i\}$ also contains the modified $\{a_i\}$ and vice versa. Let $N$ be a normal subgroup containing $\{a_i\}$. Since it's a group, it also contains $a_i^{-1}$ for all $i$. And the same argument holds true if $N$ is a normal subgroup containing the modified $\{a_i\}$. Thus, the normal subgroups are invariant under the inversion transformation.\\
+Now suppose $N$ is a normal subgroup containing $\{a_i\}$. Since it's a group, it must also contain $a_ia_j$ for every $ij$ pair. Now assume the converse. Assume $N$ is a normal subgroup containing the modified $\{a_ia_j\}$, where $a_i$ is replaced by $a_ia_j$. But $N$ still contains $a_j$, and by extension $a_j^{-1}$, so the product of $a_ia_j$ and $a_j^{-1}$, which is $a_i$, must also be in the group. Hence, the normal subgroups are invariant under right multiplication. The same proof also holds for left multiplication.
+\end{proof}
+
+\begin{lem}\label{conj}
+Given a group $G$, and an ordered set of elements of $G$, $\{a_i\}$, then the normal subgroups of $G$ are invariant under the replacement of $a_i$ by $xa_ix^{-1}$, where $x \in G$.
+\end{lem}
+
+\begin{proof}
+Consider a normal subgroup $N$ containing $\{a_i\}$. Since it's a normal subgroup, $xNx^{-1}=N$, hence $N$ contains $xa_ix^{-1}$ for any $i$. Now consider a normal subgroup containing the modified $\{a_i\}$, where $a_i$ has been replaced with $xa_ix^{-1}$. Since $N$ is normal $x^{-1}Nx=N$, so $N$ contains $a_i$. Hence normal subgroups are invariant under conjugation by generators.
+\end{proof}
+
+The transformations mentioned in lemma \autoref{elementary} are called Nielsen transformations, and the transformation mentioned in lemma \autoref{conj} is called the conjugation transformation.
+
+\begin{lem}
+If $\langle S;R \rangle$ presents a group $G$, then so does $\langle S; R' \rangle$, where $R'$ is $R$ transformed by the elementary Nielsen transformations or the conjugation transformation.
+\end{lem}
+
+\begin{proof}
+Since the smallest normal subgroup containing $R$ and $R'$ is the same, by lemmas \autoref{elementary} and \autoref{conj}, the quotient group remains the same and so does the group.
+\end{proof}
+
+\begin{defn}
+A group is said to be finitely presented if it can be presented in the form $\langle G;R\rangle$, where both $G$ and $R$ are finite sets.
+\end{defn}
+
+\begin{defn}
+A finite presentation, i.e. $G$ and $R$ are finite, is said to be balanced if $|G|=|R|$.
+\end{defn}
+
+It is obvious the if one takes the presentation $\langle S;S \rangle$, the presentation generates just the trivial group, because the normal closure of $S$ in $\mathbb{F}_S$ will be the whole group, which means the quotient reduces to $\{e\}$. This kind of presentation is also called the trivial presentation. It's obvious that for a finite $S$, a trivial presentation is balanced. It's also obvious that the elementary Nielsen transformations and the conjugation transformation does not change the cardinality of the set of relations, i.e. these transformation preserve balance. It's only a natural question to ask now whether we can obtain any finite balanced presentation of the trivial group starting from the trivial presentation. Here's a more formal statement:
+
+\begin{conj}[Andrews-Curtis Conjecture]
+A finite balanced presentation of the trivial group can be transformed into the trivial presentation using a finite sequence of elementary Nielsen transformations and the conjugation transformation.
+\end{conj}
+
+The Andrew-Curtis conjecture as of yet, is an open problem. It's been shown to be true under stronger conditions like limiting the size of relations and generators\cite{genetic}, but the most general statement is unproven. It's also known to be false under weaker conditions, i.e. when one just deals with general groups and not trivial groups in particular.
+
+\section{An alternative definition for free groups}
+
+Since we've already defined free groups before, we'll use a made up term here, "superfree" groups, until we show the equivalence of the originally defined free groups and superfree groups. Beyond that point, we'll use the term free groups as usual.
+
+\begin{defn}\cite{lyndon}
+Let $X$ be a subset of the group $F$. Then $F$ is said to be a superfree group with the basis $X$ if any function from $X$ to a group $G$ can be uniquely extended to homomorphism from $F$ to $G$
+\end{defn}
+
+This definition does not guarantee the existence of a superfree group. We need to construct a superfree group ourselves to show its existence. Fortunately as it turns out, a free group is also superfree.
+
+\begin{prop}
+A free group $F$ with a basis $B$ is superfree with the basis $B$.
+\end{prop}
+
+\begin{proof}
+Let $f$ be a function from $B$ to some group $G$. Since $B$ generates the free group $F$, any homomorphism from $F$ is uniquely determined by its action on the generating set, and since the action of the homomorphism is defined by $f$, the homomorphism from $F$ to $G$ is uniquely defined. This shows that a free group is superfree.
+\end{proof}
+
+Now if we manage to show that there can only be one superfree group that can be generated from a given basis, we'll effectively have shown free and superfree groups are the same thing.
+
+\begin{prop}\label{univ}
+If two superfree groups have the same basis, they are isomorphic.
+\end{prop}
+
+\begin{proof}
+Let two superfree groups, $F_1$ and $F_2$ have the basis $B$. Consider the inclusion map from $B$ to $F_2$. Since $F_1$ is superfree with the basis $B$, there exists a unique homomorphism $f_{12}$ from $F_1$ to $F_2$. Similarly, there exists a unique homomorphism $f_{21}$ from $F_2$ to $F_1$. Consider the composition of $f_{12}$ and $f_{21}$, $g = f_{21} \circ f_{12}$. $g$ is a homomorphism from $F_1$ to $F_1$. Also, $g$ acts as the inclusion map on the basis $B$. An inclusion map on $B$ extends uniquely as the identity automorphism on $F_1$. This means $g$ is the identity automorphism on $F_1$ and $f_{12} = f_{21}^{-1}$. If $f_{12}$ is invertible, it must be an isomorphism which proves the proposition.
+\end{proof}
+
+This concludes the proof of the fact that free groups and superfree groups are the same thing, and the result of this endeavour is that we now have another definition of a free group which is more concise and does not involve unnecessary constructions.
+
+\section{More about free groups}
+
+Here's another proof of an already proven theorem, this time using the new defintion of a free group.
+
+\begin{thm}
+If $F_1$ is a free group with basis $B_1$ and $F_2$ a free group with basis $B_2$, and if $|B_1|=|B_2|$, then $F_1 \cong F_2$.
+\end{thm}
+
+\begin{proof}
+Since $B_1$ has the same cardinality as $B_2$, consider an invertible map $b$ from $B_2$. The map $b$ uniquely extends to a homomorphism $f_{12}$ from $F_1$ to $F_2$. Similarly, $b^{-1}$ extends to a unique homomorphism $f_{21}$ from $F_2$ to $F_1$. The composition of $f_{12}$ and $f_{21}$ is a homomorphism from $F_1$ to $F_1$. But this composed homomorphism acts identically on $B_1$, and the identity map on $B_1$ extends uniquely to the identity automorphism on $F_1$. If the composition of $f_{12}$ and $f_{21}$ is the identity automorphism, then they must be invertible, hence they are isomorphisms.
+\end{proof}
+This proof was a little more elegant than the earlier proof that explicitly constructed an isomorphism.
+
+Now we'll develop a couple of lemmas to help prove the converse of the previous theorem.
+
+\begin{lem}\label{basis}\cite{halmos}
+If a finite dimensional vector space has two bases of cardinality $m$ and $n$, then $m=n$.
+\end{lem}
+
+\begin{proof}
+Let the two bases be $\{a_1, a_2 ,\cdots a_n\}$ and $\{b_1, b_2, \cdots b_m\}$. Consider the ordered set formed by appending the first element of $a$ basis to the $b$ basis: $\{a_1, b_1, b_2, \cdots, b_m\}$. This set is not linearly independent, so we can pick out an $b_i$ such that it's a linear combination of all the elements preceding it and $i$ is minimized. Delete that $b_i$ from the set. Deleting the element does not change the span of the set, so it still spans the whole vector space. Clearly, $m$ can't be less than $n$ otherwise you'd run out of $b_i$s and still have some $a_i$ left unused. But that couldn't be possible because the $a_i$s are linearly indepedent. That means $m \geq n$. We can flip the bases now and we get $n \geq m$ which shows $m=n$.
+\end{proof}
+
+\begin{lem}\label{extension}
+If a set in a $\mathbb{Z}$-module is linearly dependent in the vector space one gets after extending the ring $\mathbb{Z}$ to the field $\mathbb{Q}$, it's also linearly dependent in the $\mathbb{Z}$-module.
+\end{lem}
+
+\begin{proof}
+If there exist some non zero coefficients such that $\sum c_ia_i$ is $0$, and the $c_i$s are all rational and in their reduced form, then let $f$ be the lowest common denominator of all the denominators. Multiplying $f$ by every $c_i$ gives an integer, and these integers can be used as coefficients to show that the set is dependent in the $\mathbb{Z}$-module.
+\end{proof}
+
+\begin{lem}
+If a $\mathbb{Z}$-module has two bases whose cardinality is at most $\aleph_0$, then the two bases have the same cardinality.
+\end{lem}
+
+\begin{proof}
+If the bases have finite cardinality, then one can use the same proof as in lemma $\autoref{basis}$, and that as allowed because of lemma $\autoref{extension}$. If one of the bases has $\aleph_0$ cardinality, we can show using the same technique as in lemma $\autoref{basis}$ to show that the other basis is also at least countable. Also, because it's at most countable, it's exactly countable. And two countable sets have a bijection between them, so they have the same cardinality.
+\end{proof}
+
+\begin{defn}
+A group $F$ is called a free abelian group with a basis $B$ if for a function $f$ from $B$ to an abelian group $G$, then there exists a unique homomorphism from $F$ to $G$, whose restriction to $B$ is $f$.
+\end{defn}
+
+\begin{defn}
+A commutator of two elements $a$ and $b$ of a group is the element $a^{-1}b^{-1}ab$.
+\end{defn}
+
+\begin{defn}
+The abelianization of a group $G$ is the group $Q$ obtained by taking the quotient of $G$ with the commutator of every pair of elements in $G$. The quotient group $Q$ is abelian.
+\end{defn}
+
+\begin{lem}\label{commu}
+Consider a word in the commutator subgroup of some free group. Let the word be of $w_1abw_2$, where $a$ and $b$ are single letters and $w_1$ and $w_2$ are sub-words (possibly empty). Then the word $w_1baw_2$ is also in the commutator subgroup.
+\end{lem}
+
+\begin{proof}
+If we show that one can reach $w_1baw_2$ from $w_1abw_2$ by just using conjugation and product with commutators, we will be done, since the commutator subgroup is a normal subgroup. Consider this sequence of operations: first conjugate by $w_1$, so the word looks like $w_1^{-1}w_1abw_2w_1$, or the reduced form is $abw_2w_1$. Next multiply by the commutator $bab^{-1}a^{-1}$. This gives the word $baw_2w_1$. Now conjugate by $w_1^{-1}$, so one gets $w_1baw_2$, which is what one wanted.
+\end{proof}
+
+This proof shows that transposing two adjacent letters in a word of the commutator subgroup results in a word that is still in the commutator subgroup. Since every permutation is the product of adjacent transposition, a permutation of any element of the commutator subgroup is still in the commutator subgroup. This means that all the words for which the sum of exponent of each letter is zero is part of the commutator subgroup. And for any word in which the sum of exponents of some letter is not zero, it can be shown that it is a coset of the commutator subgroup. Hence, the commutator subgroup is the set of all words in which the sum of exponents of all the letters is zero.
+
+\begin{lem}\label{stuck}
+The abelianization of the free group on a set $X$ is isomorphic to the free abelian group on $X$.
+\end{lem}
+
+\begin{proof}
+Let $F$ be the free group on $X$, and let $FA$ be the free abelian group on $X$. Consider the inclusion map $\phi_1$ from $X$ to $F$ and the inclusion map $\phi_2$ from $FA$. And consider the map $q$ which takes $F$ to its quotient $Ab$ by the commutator subgroup $h$. The map $\phi_2$ extends uniquely to a homomorphism $a$ from $F$ to $FA$. The composite map $q \circ \phi_1$ extends uniquely to a homomorphism from $FA$ to $Ab$. Clearly, $h$ is a subset of the kernel of $a$, as a consequence of lemma \autoref{commu}. Now we just need to show that any element in the kernel belongs to the commutator subgroup $h$. Consider some word $w$ that does not belong to the commutator subgroup. Then, collecting all the letters whose exponents do not sum to $0$ in the word will give us a word of the form $a_1^{n_1}a_2^{n_2}\ldots a_k^{n_k}$, where $a_i$s are distinct and none of the exponents are $0$. The image of this word in $a$ is clearly not identity, which shows that the commutator subgroup is the kernel of $a$. By the first isomorphism theorem, $FA \cong Ab$.
+\end{proof}
+
+\begin{lem}
+If two free abelian groups have the same basis, they are isomorphic
+\end{lem}
+
+\begin{proof}
+The proof is identical to that in proposition \autoref{univ}.
+\end{proof}
+
+Elements of free abelian groups on a basis $B$ are represented as a set of tuples, with the first element being a unique element of $B$, and the second being an integer, and there being finitely many tuples with a non-zero second entry. Multiplication of two elements adds the integers in the second field together, and the identity element is where every member has the integer field as $0$. This looks a lot like a vector space, and maybe we can use a few techniques from linear algebra to solve problems here.
+
+\begin{lem}
+A free abelian group is isomorphic to a $\mathbb{Z}$-module with dimension being the cardinality of the basis of the group.
+\end{lem}
+
+\begin{proof}
+Consider a mapping $f$ acting from a $\mathbb{Z}$-module to a free group in the manner: the elements of the canonical basis map to a single letter in the free abelian group. Vector addition correspondingly maps to group multiplication and scalar multiplication with $a$ maps to exponentiation $a$ times if $a$ is non negative, or the inverse of scalar multiplication with $-a$ otherwise. This shows that a $\mathbb{Z}$-module has the same structure as a free abelian group.
+\end{proof}
+
+\begin{thm}\label{conv}
+If two free groups are isomorphic, with the cardinality of their bases being at most $\aleph_0$, then their bases have the same cardinality.
+\end{thm}
+
+\begin{proof}
+One begins by abelianizing the free groups, so one gets isomorphic free abelian groups on the same basis. This is true because \autoref{stuck}. And since free abelian groups are isomorphic to $\mathbb{Z}$-modules, one gets a pair of isomorphic $\mathbb{Z}$-modules. All we need to do now is show their bases have the same cardinality because abelianization does not change the cardinality of the basis. Let $f$ be the isomorphism between the modules $z_1$ and $z_2$. Let $b_1$ be the basis of $z_1$ and $b_2$ of $z_2$. The image of $z_1$, $f(z_1)$ is also a basis for $z_2$. Now we have two bases for $z_2$, and both their cardinalities are at most $\aleph_0$. Hence, they must have the same cardinality. This shows the isomorphic free groups have bases with same cardinalities.
+\end{proof}
+
+\begin{thm}\cite{meier}
+$\mathbb{F}_3$ is isomorphic to a subgroup of $\mathbb{F}_2$.
+\end{thm}
+The converse of the above statement, of course, trivially true. And one doesn't expect statements like this to be true in general. The analogous statement for vector spaces, for example, is false. The reason why this statement turns out to be true is non-abelianness of $\mathbb{F}_2$ (in fact, any free group of rank greater than $1$ is not abelian).
+\begin{proof}
+Let $\{a,b\}$ be the generator set for $\mathbb{F}_2$. Consider the subgroup $H$ generated by the elements of the set $S = \{a, bab^{-1}, b^2ab^{-2}\}$. Let $\{x,y,z\}$ be the basis of $\mathbb{F}_3$ and consider the mapping $f$ such that $f(x)=a$, $f(y)=bab^{-1}$, and $f(c) = b^2ab^{-2}$. This mapping can be linearly extended to a homomorphism. Since $S$ generates the subgroup $H$, the mapping is surjective, so all one needs to show now now is that the mapping is injective to prove that it's a homomorphism. For that, we need to show that no non empty word in $\mathbb{F}_3$ maps to the empty word. This we'll show by proving that the length of $f(wl)$ is greater than then length of $f(w)$, where $w$ is a reduced word in $\mathbb{F}_3$ and $l$ is a letter in $\mathbb{F}_3$ and $l$ is not the inverse of the last letter in $w$. Then two cases can arise: either the last letter of $w$ is the same as $l$, in which case the length of the image increases by $1$. In the second case, the word length of the image will increase by at least $1$, if $l=a^{\pm 1}$, in the other case, the word length will increase even more. Also, all the single letter words in $\mathbb{F}_3$ have images of length greater than $0$. This shows that any word in $\mathbb{F}_3$ will have an image of length greater than $0$, hence the kernel of $f$ is trivial and $f$ is an isomorphism.
+\end{proof}
+
+\begin{cor}
+$\mathbb{F}_C$ is isomorphic to a subgroup of $\mathbb{F}_m$ if $m \geq 2$ where $C$ is countably infinite set.
+\end{cor}
+
+\begin{proof}
+Use the set $\{a, bab^{-1}, b^2ab^{-2}, \cdots\}$ as a basis for $\mathbb{F}_C$.
+\end{proof}
+
+\section{More about presentations}
+A presentation of the form $\langle G;R \rangle$ generates the quotient group $Q$ of $\mathbb{F}_G$ by the normal closure of $R$. This means that $G$ acts as the generator set for $Q$, and all the words in $R$ evaluate to the identity in $Q$.
+
+An obvious question one could ask about is whether finitely presented groups are finite. That is clearly false, since $\mathbb{Z}$ is finitely presented but it's not finite. What about imposing certain stronger conditions? What about a finitely presented group, all of whose elements are of finite order? What if the group in question is abelian?\cite{baumslag}\\
+With the last two conditions, it's easy to answer the question; finitely presented abelian groups such that the order of every member is finite are finite. For such groups, it's possible to get an upper bound on their size.
+
+\begin{thm}\label{burn}
+If $G$ is a finitely presented abelian group such that for all $x \in G$, $x^n=e$ for some $n$, then $G$ is a finite group.
+\end{thm}
+
+\begin{proof}
+Let $G$ have $n$ generators and the order of the $i$th generator $g_i$ be $m_i$. Since $G$ is abelian, every word in the group can be rearranged so that the $i$th generators are all together. Then every word in $G$ can be written as an n-tuple with the $i$th term representing the exponent of $g_i$. And since the exponent of $g_i$ has to be less than $m_i$, the number of such tuples is bounded by $\prod_{i=1}^{n}o_i$. Hence the group $G$ is finite.
+\end{proof}
+
+\begin{cor}
+If $G$ is a finitely presented group such that all elements of $G$ have order less than or equal to $2$, the $G$ is finite.
+\end{cor}
+
+\begin{proof}
+By theorem \autoref{burn}, it suffices to prove that $G$ is abelian. If the order of every element in $G$ is less than or equal to $2$, then for all $g \in G$,
+$$g=g^{-1}$$
+Then take any two $a$ and $b$ in $G$:
+$$ab = (ab)^{-1} = b^{-1}a^{-1} = ba$$
+This shows that the group is abelian, and hence finite.
+\end{proof}
+
+The statement when made a little weaker by lifting the condition of commutativity, is in general, false. This problem is known as Burnside's problem, named after William Burnside who first posed it in the early 20th century.
+
+\section{An application in algebraic topology}
+The following theorem will show how group theory makes certain problems in topology much simpler. But before we prove the theorem, we'll need a few lemmas, some of which we'll prove, and some we'll leave unproven.
+
+\begin{defn}
+The topological space one gets by deleting $n$ distinct points from $\mathbb{R}^2$ is called an $n$-space.
+\end{defn}
+
+\begin{lem}
+The fundmantal group of an $n$-space is the free group of rank $n$.
+\end{lem}
+
+This lemma will be left unproven, as we'll need to take a long digression into topology to prove it.
+
+\begin{lem}[Nielsen-Schreier Theorem]\label{subg}
+A subgroup of a free group is free.
+\end{lem}
+
+This lemma will be left unproven as the author has absolutely no idea how to prove it.
+
+\begin{lem}\label{impo}
+Two elements $a$ and $b$ of a free group commute with each other iff both $a$ and $b$ are perfect powers of some element $x$.
+\end{lem}
+
+\begin{proof}
+If $a$ and $b$ are perfect powers of some element $x$, it's obvious that they commute; it follows from the fact that group multiplication is associative. The converse will use the Nielsen-Schreier theorem. Assume that $a$ and $b$ are not perfect powers of some word $x$ in the free group. That means $a^m \neq b^n$ for all pairs of integers $(m,n)$ except $(0,0)$. Consider the subgroup $H$ generated by $a$ and $b$. Since $a$ and $b$ commute, any element of $H$ can be uniquely written as $a^{c_a}b^{c_b}$, where $c_a$ and $c_b$ are integers. This means that the subgroup $H$ is isomorphic to the group $\mathbb{Z}^2$. But this means we have a subgroup of a free group which is not free, but that is false by lemma \autoref{subg}. Hence, our assumption that $a$ and $b$ are not perfect powers of some word $x$ must be false. Hence, if $a$ and $b$ commute, they must be of the form $x^n$ and $x^m$ for some word $x$ and some integers $m$ and $n$.
+\end{proof}
+
+\begin{defn}
+The commutator of a list of elements is analogous to the commutator of two elements, i.e. $[a_1, a_2, \cdots, a_n]$ is defined as $a_1a_2\cdots a_na_1^{-1}a_2^{-2}\cdots a_n^{-1}$.
+\end{defn}
+
+\begin{lem}
+The commutator of two elements is identity iff they commute.
+\end{lem}
+
+\begin{proof}
+If they commute, then the commutator $aba^{-1}b^{-1}$ reduces to identity. If $aba^{-1}b^{-1}=e$, then $ab=ba$, which means they commute. 
+\end{proof}
+
+\begin{lem}\label{impo2}
+In a free group, if the word $[a_1, a_2, \ldots, a_m]$ ($m>1$) is $x^n$ for some $x$ in the group and some positive integer $n$ and the $a_i$s are members of the basis, then $n=1$, and $x$ is the word itself.
+\end{lem}
+
+\begin{proof}
+If $x$ was cyclically reduced, so would $x^n$, and if $x$ were not cyclically reduced, neither would $x^n$. This means that in this case, $x$ is cyclically reduced. Powers of cyclically reduced words are obtained by just formal concatenation. Which means $x^n$ is just $x$ concatenated $n$ times, and hence every letter of $x$ is repeated $n$ times in $x^n$. But each letter in the word occurs exactly once, which means $n=1$.
+\end{proof}
+
+\begin{thm}
+For any $n$-space, there exists a loop such that filling in any $k$ of the $n$ holes makes it nullhomotopic, but filling in any lesser number of holes leaves it non trivial.
+\end{thm}
+
+\begin{proof}
+The fundamental group of an $n$-space is the free group on $n$ generators. So any loop in the space is an element of the fundamental group and filling in $k$ holes corresponds to the homomorphism that maps $k$ basis elements to identity and the rest to non trivial elements. To be more precise, if the holes $\{h_i\}$ are filled up, it corresponds to the homomorphism which maps the $a_i$ basis element to identity if the hole $h_i$ is filled up, otherwise, it maps the basis element to itself. Our goal is to find the an element in the free group of rank $n$ such that the homomorphism corresponding to filling up $k$ or more holes maps it to the identity, and any homomorphism corresponding to filling up less than $k$ holes does not map it to the identity.
+If $k=n$, the answer is trivial, just take the word $abc\ldots n$. This word satisfies the required properties. For $k<n$, consider the sequence of words, $\{c_i\}$, where $c_i$ is the commutator of the $i$th collection of $(k+1)$ letters from the $n$ basis letters. There clearly are $n \choose {k+1}$ such commutators. The word $W$ as described below satisfies the properties.
+$$W = \left[ \ldots [[a^{-1}b^{-1}c^{-1}\ldots n^{-1}, c_1], c_2] \ldots c_{n \choose{k+1}}\right]$$
+Here's why $W$ satisfies the required properties. If at least $k$ basis elements get mapped to the identity, at least one of the $n \choose{k+1}$ commutators will map to identity, which means the whole compound commutator will collapse to identity. This shows that the first property is satisfied.\\
+To show that $W$ satisfies the second property, we'll first show none of the simple commutators $c_i$ map to identity under the homomorphism. This is obvious because the homomorphism sends at most $(k-1)$ basis elements to identity, and the simple commutators have $(k+1)$ elements, which means their image will have at least $2$ elements, which does not evaluate to identity. Now we need to show that the compound commutator does not collapse either. To prove that, we'll start from the deepest nested commutator, which is $[a^{-1}b^{-1}c^{-1}\ldots n^{-1}, c_1]$. The image of the this commutator under the homomorphism will leave at least $(n-k+1)$ terms in the left hand term. From lemma \autoref{impo}, we know for this commutator to collapse, they elements have to be perfect powers of some element in the free group, and from lemma \autoref{impo2}, we know that element has to be $c_1$. This means the left hand term will have to be a perfect power of $c_1$ for the commutator to collapse. But that's not possible because the first letter in the left hand term has a negative exponent whereas the first letter in any power of $c_1$ will have a positive exponent. Extending this argument, and reducing the nesting level, we can say the same for the commutator with $c_2$, $c_3$ and so on. This shows the word does not collapse if the homomorphism maps at most $(k-1)$ basis elements to identity.\\
+This concludes the proof and shows the existence of such a loop by explicit construction.
+\end{proof}
+
+A real life ``application" of the above theorem and construction comes in when one wants to hang a picture frame on $n$ nails on a wall such that taking any $k$ out will cause the frame to drop, but any lesser number will keep it hanging.
+
 \bibliography{references}
+\bibliographystyle{amsplain}
 
 \end{document}
