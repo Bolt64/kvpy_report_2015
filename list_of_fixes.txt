@@ -1,0 +1,5 @@
+List of amendments:
+
+    1. When defining or introducing new terms, put them in \emph{}
+    2. Change the voice from first person to third person. (Done)
+    3. Oxford comma.
