@@ -1,0 +1,230 @@
+\section{An alternative definition for free groups}
+
+Since we've already defined free groups before, we'll use a made up term here, "superfree" groups, until we show the equivalence of the originally defined free groups and superfree groups. Beyond that point, we'll use the term free groups as usual.
+
+\begin{defn}\cite{lyndon}
+Let $X$ be a subset of the group $F$. Then $F$ is said to be a superfree group with the basis $X$ if any function from $X$ to a group $G$ can be uniquely extended to homomorphism from $F$ to $G$
+\end{defn}
+
+This definition does not guarantee the existence of a superfree group. We need to construct a superfree group ourselves to show its existence. Fortunately as it turns out, a free group is also superfree.
+
+\begin{prop}
+A free group $F$ with a basis $B$ is superfree with the basis $B$.
+\end{prop}
+
+\begin{proof}
+Let $f$ be a function from $B$ to some group $G$. Since $B$ generates the free group $F$, any homomorphism from $F$ is uniquely determined by its action on the generating set, and since the action of the homomorphism is defined by $f$, the homomorphism from $F$ to $G$ is uniquely defined. This shows that a free group is superfree.
+\end{proof}
+
+Now if we manage to show that there can only be one superfree group that can be generated from a given basis, we'll effectively have shown free and superfree groups are the same thing.
+
+\begin{prop}\label{univ}
+If two superfree groups have the same basis, they are isomorphic.
+\end{prop}
+
+\begin{proof}
+Let two superfree groups, $F_1$ and $F_2$ have the basis $B$. Consider the inclusion map from $B$ to $F_2$. Since $F_1$ is superfree with the basis $B$, there exists a unique homomorphism $f_{12}$ from $F_1$ to $F_2$. Similarly, there exists a unique homomorphism $f_{21}$ from $F_2$ to $F_1$. Consider the composition of $f_{12}$ and $f_{21}$, $g = f_{21} \circ f_{12}$. $g$ is a homomorphism from $F_1$ to $F_1$. Also, $g$ acts as the inclusion map on the basis $B$. An inclusion map on $B$ extends uniquely as the identity automorphism on $F_1$. This means $g$ is the identity automorphism on $F_1$ and $f_{12} = f_{21}^{-1}$. If $f_{12}$ is invertible, it must be an isomorphism which proves the proposition.
+\end{proof}
+
+This concludes the proof of the fact that free groups and superfree groups are the same thing, and the result of this endeavour is that we now have another definition of a free group which is more concise and does not involve unnecessary constructions.
+
+\section{More about free groups}
+
+Here's another proof of an already proven theorem, this time using the new defintion of a free group.
+
+\begin{thm}
+If $F_1$ is a free group with basis $B_1$ and $F_2$ a free group with basis $B_2$, and if $|B_1|=|B_2|$, then $F_1 \cong F_2$.
+\end{thm}
+
+\begin{proof}
+Since $B_1$ has the same cardinality as $B_2$, consider an invertible map $b$ from $B_2$. The map $b$ uniquely extends to a homomorphism $f_{12}$ from $F_1$ to $F_2$. Similarly, $b^{-1}$ extends to a unique homomorphism $f_{21}$ from $F_2$ to $F_1$. The composition of $f_{12}$ and $f_{21}$ is a homomorphism from $F_1$ to $F_1$. But this composed homomorphism acts identically on $B_1$, and the identity map on $B_1$ extends uniquely to the identity automorphism on $F_1$. If the composition of $f_{12}$ and $f_{21}$ is the identity automorphism, then they must be invertible, hence they are isomorphisms.
+\end{proof}
+This proof was a little more elegant than the earlier proof that explicitly constructed an isomorphism.
+
+Now we'll develop a couple of lemmas to help prove the converse of the previous theorem.
+
+\begin{lem}\label{basis}\cite{halmos}
+If a finite dimensional vector space has two bases of cardinality $m$ and $n$, then $m=n$.
+\end{lem}
+
+\begin{proof}
+Let the two bases be $\{a_1, a_2 ,\cdots a_n\}$ and $\{b_1, b_2, \cdots b_m\}$. Consider the ordered set formed by appending the first element of $a$ basis to the $b$ basis: $\{a_1, b_1, b_2, \cdots, b_m\}$. This set is not linearly independent, so we can pick out an $b_i$ such that it's a linear combination of all the elements preceding it and $i$ is minimized. Delete that $b_i$ from the set. Deleting the element does not change the span of the set, so it still spans the whole vector space. Clearly, $m$ can't be less than $n$ otherwise you'd run out of $b_i$s and still have some $a_i$ left unused. But that couldn't be possible because the $a_i$s are linearly indepedent. That means $m \geq n$. We can flip the bases now and we get $n \geq m$ which shows $m=n$.
+\end{proof}
+
+\begin{lem}\label{extension}
+If a set in a $\mathbb{Z}$-module is linearly dependent in the vector space one gets after extending the ring $\mathbb{Z}$ to the field $\mathbb{Q}$, it's also linearly dependent in the $\mathbb{Z}$-module.
+\end{lem}
+
+\begin{proof}
+If there exist some non zero coefficients such that $\sum c_ia_i$ is $0$, and the $c_i$s are all rational and in their reduced form, then let $f$ be the lowest common denominator of all the denominators. Multiplying $f$ by every $c_i$ gives an integer, and these integers can be used as coefficients to show that the set is dependent in the $\mathbb{Z}$-module.
+\end{proof}
+
+\begin{lem}
+If a $\mathbb{Z}$-module has two bases whose cardinality is at most $\aleph_0$, then the two bases have the same cardinality.
+\end{lem}
+
+\begin{proof}
+If the bases have finite cardinality, then one can use the same proof as in lemma $\autoref{basis}$, and that as allowed because of lemma $\autoref{extension}$. If one of the bases has $\aleph_0$ cardinality, we can show using the same technique as in lemma $\autoref{basis}$ to show that the other basis is also at least countable. Also, because it's at most countable, it's exactly countable. And two countable sets have a bijection between them, so they have the same cardinality.
+\end{proof}
+
+\begin{defn}
+A group $F$ is called a free abelian group with a basis $B$ if for a function $f$ from $B$ to an abelian group $G$, then there exists a unique homomorphism from $F$ to $G$, whose restriction to $B$ is $f$.
+\end{defn}
+
+\begin{defn}
+A commutator of two elements $a$ and $b$ of a group is the element $a^{-1}b^{-1}ab$.
+\end{defn}
+
+\begin{defn}
+The abelianization of a group $G$ is the group $Q$ obtained by taking the quotient of $G$ with the commutator of every pair of elements in $G$. The quotient group $Q$ is abelian.
+\end{defn}
+
+\begin{lem}\label{commu}
+Consider a word in the commutator subgroup of some free group. Let the word be of $w_1abw_2$, where $a$ and $b$ are single letters and $w_1$ and $w_2$ are sub-words (possibly empty). Then the word $w_1baw_2$ is also in the commutator subgroup.
+\end{lem}
+
+\begin{proof}
+If we show that one can reach $w_1baw_2$ from $w_1abw_2$ by just using conjugation and product with commutators, we will be done, since the commutator subgroup is a normal subgroup. Consider this sequence of operations: first conjugate by $w_1$, so the word looks like $w_1^{-1}w_1abw_2w_1$, or the reduced form is $abw_2w_1$. Next multiply by the commutator $bab^{-1}a^{-1}$. This gives the word $baw_2w_1$. Now conjugate by $w_1^{-1}$, so one gets $w_1baw_2$, which is what one wanted.
+\end{proof}
+
+This proof shows that transposing two adjacent letters in a word of the commutator subgroup results in a word that is still in the commutator subgroup. Since every permutation is the product of adjacent transposition, a permutation of any element of the commutator subgroup is still in the commutator subgroup. This means that all the words for which the sum of exponent of each letter is zero is part of the commutator subgroup. And for any word in which the sum of exponents of some letter is not zero, it can be shown that it is a coset of the commutator subgroup. Hence, the commutator subgroup is the set of all words in which the sum of exponents of all the letters is zero.
+
+\begin{lem}\label{stuck}
+The abelianization of the free group on a set $X$ is isomorphic to the free abelian group on $X$.
+\end{lem}
+
+\begin{proof}
+Let $F$ be the free group on $X$, and let $FA$ be the free abelian group on $X$. Consider the inclusion map $\phi_1$ from $X$ to $F$ and the inclusion map $\phi_2$ from $FA$. And consider the map $q$ which takes $F$ to its quotient $Ab$ by the commutator subgroup $h$. The map $\phi_2$ extends uniquely to a homomorphism $a$ from $F$ to $FA$. The composite map $q \circ \phi_1$ extends uniquely to a homomorphism from $FA$ to $Ab$. Clearly, $h$ is a subset of the kernel of $a$, as a consequence of lemma \autoref{commu}. Now we just need to show that any element in the kernel belongs to the commutator subgroup $h$. Consider some word $w$ that does not belong to the commutator subgroup. Then, collecting all the letters whose exponents do not sum to $0$ in the word will give us a word of the form $a_1^{n_1}a_2^{n_2}\ldots a_k^{n_k}$, where $a_i$s are distinct and none of the exponents are $0$. The image of this word in $a$ is clearly not identity, which shows that the commutator subgroup is the kernel of $a$. By the first isomorphism theorem, $FA \cong Ab$.
+\end{proof}
+
+\begin{lem}
+If two free abelian groups have the same basis, they are isomorphic
+\end{lem}
+
+\begin{proof}
+The proof is identical to that in proposition \autoref{univ}.
+\end{proof}
+
+Elements of free abelian groups on a basis $B$ are represented as a set of tuples, with the first element being a unique element of $B$, and the second being an integer, and there being finitely many tuples with a non-zero second entry. Multiplication of two elements adds the integers in the second field together, and the identity element is where every member has the integer field as $0$. This looks a lot like a vector space, and maybe we can use a few techniques from linear algebra to solve problems here.
+
+\begin{lem}
+A free abelian group is isomorphic to a $\mathbb{Z}$-module with dimension being the cardinality of the basis of the group.
+\end{lem}
+
+\begin{proof}
+Consider a mapping $f$ acting from a $\mathbb{Z}$-module to a free group in the manner: the elements of the canonical basis map to a single letter in the free abelian group. Vector addition correspondingly maps to group multiplication and scalar multiplication with $a$ maps to exponentiation $a$ times if $a$ is non negative, or the inverse of scalar multiplication with $-a$ otherwise. This shows that a $\mathbb{Z}$-module has the same structure as a free abelian group.
+\end{proof}
+
+\begin{thm}\label{conv}
+If two free groups are isomorphic, with the cardinality of their bases being at most $\aleph_0$, then their bases have the same cardinality.
+\end{thm}
+
+\begin{proof}
+One begins by abelianizing the free groups, so one gets isomorphic free abelian groups on the same basis. This is true because \autoref{stuck}. And since free abelian groups are isomorphic to $\mathbb{Z}$-modules, one gets a pair of isomorphic $\mathbb{Z}$-modules. All we need to do now is show their bases have the same cardinality because abelianization does not change the cardinality of the basis. Let $f$ be the isomorphism between the modules $z_1$ and $z_2$. Let $b_1$ be the basis of $z_1$ and $b_2$ of $z_2$. The image of $z_1$, $f(z_1)$ is also a basis for $z_2$. Now we have two bases for $z_2$, and both their cardinalities are at most $\aleph_0$. Hence, they must have the same cardinality. This shows the isomorphic free groups have bases with same cardinalities.
+\end{proof}
+
+\begin{thm}\cite{meier}
+$\mathbb{F}_3$ is isomorphic to a subgroup of $\mathbb{F}_2$.
+\end{thm}
+The converse of the above statement, of course, trivially true. And one doesn't expect statements like this to be true in general. The analogous statement for vector spaces, for example, is false. The reason why this statement turns out to be true is non-abelianness of $\mathbb{F}_2$ (in fact, any free group of rank greater than $1$ is not abelian).
+\begin{proof}
+Let $\{a,b\}$ be the generator set for $\mathbb{F}_2$. Consider the subgroup $H$ generated by the elements of the set $S = \{a, bab^{-1}, b^2ab^{-2}\}$. Let $\{x,y,z\}$ be the basis of $\mathbb{F}_3$ and consider the mapping $f$ such that $f(x)=a$, $f(y)=bab^{-1}$, and $f(c) = b^2ab^{-2}$. This mapping can be linearly extended to a homomorphism. Since $S$ generates the subgroup $H$, the mapping is surjective, so all one needs to show now now is that the mapping is injective to prove that it's a homomorphism. For that, we need to show that no non empty word in $\mathbb{F}_3$ maps to the empty word. This we'll show by proving that the length of $f(wl)$ is greater than then length of $f(w)$, where $w$ is a reduced word in $\mathbb{F}_3$ and $l$ is a letter in $\mathbb{F}_3$ and $l$ is not the inverse of the last letter in $w$. Then two cases can arise: either the last letter of $w$ is the same as $l$, in which case the length of the image increases by $1$. In the second case, the word length of the image will increase by at least $1$, if $l=a^{\pm 1}$, in the other case, the word length will increase even more. Also, all the single letter words in $\mathbb{F}_3$ have images of length greater than $0$. This shows that any word in $\mathbb{F}_3$ will have an image of length greater than $0$, hence the kernel of $f$ is trivial and $f$ is an isomorphism.
+\end{proof}
+
+\begin{cor}
+$\mathbb{F}_C$ is isomorphic to a subgroup of $\mathbb{F}_m$ if $m \geq 2$ where $C$ is countably infinite set.
+\end{cor}
+
+\begin{proof}
+Use the set $\{a, bab^{-1}, b^2ab^{-2}, \cdots\}$ as a basis for $\mathbb{F}_C$.
+\end{proof}
+
+\section{More about presentations}
+A presentation of the form $\langle G;R \rangle$ generates the quotient group $Q$ of $\mathbb{F}_G$ by the normal closure of $R$. This means that $G$ acts as the generator set for $Q$, and all the words in $R$ evaluate to the identity in $Q$.
+
+An obvious question one could ask about is whether finitely presented groups are finite. That is clearly false, since $\mathbb{Z}$ is finitely presented but it's not finite. What about imposing certain stronger conditions? What about a finitely presented group, all of whose elements are of finite order? What if the group in question is abelian?\cite{baumslag}\\
+With the last two conditions, it's easy to answer the question; finitely presented abelian groups such that the order of every member is finite are finite. For such groups, it's possible to get an upper bound on their size.
+
+\begin{thm}\label{burn}
+If $G$ is a finitely presented abelian group such that for all $x \in G$, $x^n=e$ for some $n$, then $G$ is a finite group.
+\end{thm}
+
+\begin{proof}
+Let $G$ have $n$ generators and the order of the $i$th generator $g_i$ be $m_i$. Since $G$ is abelian, every word in the group can be rearranged so that the $i$th generators are all together. Then every word in $G$ can be written as an n-tuple with the $i$th term representing the exponent of $g_i$. And since the exponent of $g_i$ has to be less than $m_i$, the number of such tuples is bounded by $\prod_{i=1}^{n}o_i$. Hence the group $G$ is finite.
+\end{proof}
+
+\begin{cor}
+If $G$ is a finitely presented group such that all elements of $G$ have order less than or equal to $2$, the $G$ is finite.
+\end{cor}
+
+\begin{proof}
+By theorem \autoref{burn}, it suffices to prove that $G$ is abelian. If the order of every element in $G$ is less than or equal to $2$, then for all $g \in G$,
+$$g=g^{-1}$$
+Then take any two $a$ and $b$ in $G$:
+$$ab = (ab)^{-1} = b^{-1}a^{-1} = ba$$
+This shows that the group is abelian, and hence finite.
+\end{proof}
+
+The statement when made a little weaker by lifting the condition of commutativity, is in general, false. This problem is known as Burnside's problem, named after William Burnside who first posed it in the early 20th century.
+
+\section{An application in algebraic topology}
+The following theorem will show how group theory makes certain problems in topology much simpler. But before we prove the theorem, we'll need a few lemmas, some of which we'll prove, and some we'll leave unproven.
+
+\begin{defn}
+The topological space one gets by deleting $n$ distinct points from $\mathbb{R}^2$ is called an $n$-space.
+\end{defn}
+
+\begin{lem}
+The fundmantal group of an $n$-space is the free group of rank $n$.
+\end{lem}
+
+This lemma will be left unproven, as we'll need to take a long digression into topology to prove it.
+
+\begin{lem}[Nielsen-Schreier Theorem]\label{subg}
+A subgroup of a free group is free.
+\end{lem}
+
+This lemma will be left unproven as the author has absolutely no idea how to prove it.
+
+\begin{lem}\label{impo}
+Two elements $a$ and $b$ of a free group commute with each other iff both $a$ and $b$ are perfect powers of some element $x$.
+\end{lem}
+
+\begin{proof}
+If $a$ and $b$ are perfect powers of some element $x$, it's obvious that they commute; it follows from the fact that group multiplication is associative. The converse will use the Nielsen-Schreier theorem. Assume that $a$ and $b$ are not perfect powers of some word $x$ in the free group. That means $a^m \neq b^n$ for all pairs of integers $(m,n)$ except $(0,0)$. Consider the subgroup $H$ generated by $a$ and $b$. Since $a$ and $b$ commute, any element of $H$ can be uniquely written as $a^{c_a}b^{c_b}$, where $c_a$ and $c_b$ are integers. This means that the subgroup $H$ is isomorphic to the group $\mathbb{Z}^2$. But this means we have a subgroup of a free group which is not free, but that is false by lemma \autoref{subg}. Hence, our assumption that $a$ and $b$ are not perfect powers of some word $x$ must be false. Hence, if $a$ and $b$ commute, they must be of the form $x^n$ and $x^m$ for some word $x$ and some integers $m$ and $n$.
+\end{proof}
+
+\begin{defn}
+The commutator of a list of elements is analogous to the commutator of two elements, i.e. $[a_1, a_2, \cdots, a_n]$ is defined as $a_1a_2\cdots a_na_1^{-1}a_2^{-2}\cdots a_n^{-1}$.
+\end{defn}
+
+\begin{lem}
+The commutator of two elements is identity iff they commute.
+\end{lem}
+
+\begin{proof}
+If they commute, then the commutator $aba^{-1}b^{-1}$ reduces to identity. If $aba^{-1}b^{-1}=e$, then $ab=ba$, which means they commute. 
+\end{proof}
+
+\begin{lem}\label{impo2}
+In a free group, if the word $[a_1, a_2, \ldots, a_m]$ ($m>1$) is $x^n$ for some $x$ in the group and some positive integer $n$ and the $a_i$s are members of the basis, then $n=1$, and $x$ is the word itself.
+\end{lem}
+
+\begin{proof}
+If $x$ was cyclically reduced, so would $x^n$, and if $x$ were not cyclically reduced, neither would $x^n$. This means that in this case, $x$ is cyclically reduced. Powers of cyclically reduced words are obtained by just formal concatenation. Which means $x^n$ is just $x$ concatenated $n$ times, and hence every letter of $x$ is repeated $n$ times in $x^n$. But each letter in the word occurs exactly once, which means $n=1$.
+\end{proof}
+
+\begin{thm}
+For any $n$-space, there exists a loop such that filling in any $k$ of the $n$ holes makes it nullhomotopic, but filling in any lesser number of holes leaves it non trivial.
+\end{thm}
+
+\begin{proof}
+The fundamental group of an $n$-space is the free group on $n$ generators. So any loop in the space is an element of the fundamental group and filling in $k$ holes corresponds to the homomorphism that maps $k$ basis elements to identity and the rest to non trivial elements. To be more precise, if the holes $\{h_i\}$ are filled up, it corresponds to the homomorphism which maps the $a_i$ basis element to identity if the hole $h_i$ is filled up, otherwise, it maps the basis element to itself. Our goal is to find the an element in the free group of rank $n$ such that the homomorphism corresponding to filling up $k$ or more holes maps it to the identity, and any homomorphism corresponding to filling up less than $k$ holes does not map it to the identity.
+If $k=n$, the answer is trivial, just take the word $abc\ldots n$. This word satisfies the required properties. For $k<n$, consider the sequence of words, $\{c_i\}$, where $c_i$ is the commutator of the $i$th collection of $(k+1)$ letters from the $n$ basis letters. There clearly are $n \choose {k+1}$ such commutators. The word $W$ as described below satisfies the properties.
+$$W = \left[ \ldots [[a^{-1}b^{-1}c^{-1}\ldots n^{-1}, c_1], c_2] \ldots c_{n \choose{k+1}}\right]$$
+Here's why $W$ satisfies the required properties. If at least $k$ basis elements get mapped to the identity, at least one of the $n \choose{k+1}$ commutators will map to identity, which means the whole compound commutator will collapse to identity. This shows that the first property is satisfied.\\
+To show that $W$ satisfies the second property, we'll first show none of the simple commutators $c_i$ map to identity under the homomorphism. This is obvious because the homomorphism sends at most $(k-1)$ basis elements to identity, and the simple commutators have $(k+1)$ elements, which means their image will have at least $2$ elements, which does not evaluate to identity. Now we need to show that the compound commutator does not collapse either. To prove that, we'll start from the deepest nested commutator, which is $[a^{-1}b^{-1}c^{-1}\ldots n^{-1}, c_1]$. The image of the this commutator under the homomorphism will leave at least $(n-k+1)$ terms in the left hand term. From lemma \autoref{impo}, we know for this commutator to collapse, they elements have to be perfect powers of some element in the free group, and from lemma \autoref{impo2}, we know that element has to be $c_1$. This means the left hand term will have to be a perfect power of $c_1$ for the commutator to collapse. But that's not possible because the first letter in the left hand term has a negative exponent whereas the first letter in any power of $c_1$ will have a positive exponent. Extending this argument, and reducing the nesting level, we can say the same for the commutator with $c_2$, $c_3$ and so on. This shows the word does not collapse if the homomorphism maps at most $(k-1)$ basis elements to identity.\\
+This concludes the proof and shows the existence of such a loop by explicit construction.
+\end{proof}
+
+A real life ``application" of the above theorem and construction comes in when one wants to hang a picture frame on $n$ nails on a wall such that taking any $k$ out will cause the frame to drop, but any lesser number will keep it hanging.
