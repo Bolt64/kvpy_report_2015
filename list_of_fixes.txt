@@ -1,5 +1,6 @@
 List of amendments:
 
-    1. When defining or introducing new terms, put them in \emph{}
+    1. When defining or introducing new terms, put them in \emph{} (Done)
     2. Change the voice from first person to third person. (Done)
-    3. Oxford comma.
+    3. Oxford comma. (Not bothering)
+    4. Comma splicing. (It's fine, I guess)
