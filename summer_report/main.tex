@@ -8,7 +8,7 @@
 
 \usepackage{hyperref}
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
-\setlength{\parindent}{0ex}
+%\setlength{\parindent}{0ex}
 
 \usepackage{amsmath, amsfonts, amssymb, amsthm}
 \newtheorem{thm}{Theorem}[section]
@@ -33,7 +33,15 @@
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
 
 \center % Center everything on the page
- 
+
+\vspace*{1.5cm}
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\includegraphics[scale=0.6]{images/logo.png}\\[1cm] % Include a department/university logo - this will require the graphicx package
+
 %----------------------------------------------------------------------------------------
 %	HEADING SECTIONS
 %----------------------------------------------------------------------------------------
@@ -78,12 +86,7 @@ Dr. Siddhartha \textsc{Gadgil} % Supervisor's Name
 
 {\large July 2015}\\[2cm] % Date, change the \today to a set date if you want to be precise
 
-%----------------------------------------------------------------------------------------
-%	LOGO SECTION
-%----------------------------------------------------------------------------------------
 
-\includegraphics[scale=0.7]{images/logo.png}\\[1cm] % Include a department/university logo - this will require the graphicx package
- 
 %----------------------------------------------------------------------------------------
 
 \vfill % Fill the rest of the page with whitespace
@@ -118,8 +121,10 @@ This project would not have been completed without the help of the following peo
 \section{Motivation and a little history}\label{intro}
 
 Groups, as an abstract notion worthy of interest, arose just like all other abstractions in mathematics, i.e. when mathematicians pulled back from solving specific problems, and asked themselves, what properties of the problem were the essential properties and could be abstracted out, i.e. what do permutations of a set, isometries\footnote{Isometries are transformations that preserve distance between any pair of points, like reflections or translations} of the plane and modular integers have in common. There were three things, in this specific example, that stood out: one, these `objects' could be combined or composed to create new objects, two, there existed an object, which when combined with any other object resulted in the same object, unchanged, and finally, all these objects were reversible. For example, the composition of two permutations is yet another permutation, composition of any permutation with the permutation which does not move anything gives one the original permutation back, and finally, every permutation can be reversed.\\
-But that's not all that one needs needs to motivate mathematicians to study this abstraction, unless they are studying these for their own sake. As much as mathematicians claim intellectual purity, and the pursuit of knowledge for its own sake, they are motivated to study something outside their sub-discipline only if it has some application in their sub-discipline, and that's usually demonstrated by solving some long standing open problem using the new theory or abstraction.\\
-The study of groups, as these particular abstractions were called, needed to prove its worth in this manner, by solving some long standing open problem, which would give it the push it needed to enter mainstream mathematics. That push came in the form of a problem, which asked whether a polynomial equation in one variable with degree $5$ or higher could be solved using radicals. The answer for lower degrees was known, but the collective failure of the mathematical community to find an answer for degree $5$ led to the speculation of its possibility. It was commonly believed that it was not possible to do so. The conjecture, however, needed a proof. The proof came about in 1823 and made the extensive use of group theory. That put group theory in mathematical limelight, and set its place in mainstream mathematics for years to come.\\
+But that's not all that one needs needs to motivate mathematicians to study this abstraction, unless they are studying these for their own sake. As much as mathematicians claim intellectual purity, and the pursuit of knowledge for its own sake, they are motivated to study something outside their sub-discipline only if it has some application in their sub-discipline, and that's usually demonstrated by solving some long standing open problem using the new theory or abstraction.
+
+The study of groups, as these particular abstractions were called, needed to prove its worth in this manner, by solving some long standing open problem, which would give it the push it needed to enter mainstream mathematics. That push came in the form of a problem, which asked whether a polynomial equation in one variable with degree $5$ or higher could be solved using radicals. The answer for lower degrees was known, but the collective failure of the mathematical community to find an answer for degree $5$ led to the speculation of its possibility. It was commonly believed that it was not possible to do so. The conjecture, however, needed a proof. The proof came about in 1823 and made the extensive use of group theory. That put group theory in mathematical limelight, and set its place in mainstream mathematics for years to come.
+
 In the following years, once group theory was comfortably a part of mainstream mathematics, various specializations emerged. Two specializations, geometric group theory and combinatorial group theory came about by studying the geometric aspects of groups in the first case, and applying techniques from combinatorics in the second case. These two sub-disciplines had an impact in the study of topology and mathematical logic, two widely disparate fields.
 
 \section{Some preliminary notions}
@@ -489,7 +494,6 @@ If $F_1$ is a free group with basis $B_1$ and $F_2$ a free group with basis $B_2
 Since $B_1$ has the same cardinality as $B_2$, consider an invertible map $b$ from $B_2$. The map $b$ uniquely extends to a homomorphism $f_{12}$ from $F_1$ to $F_2$. Similarly, $b^{-1}$ extends to a unique homomorphism $f_{21}$ from $F_2$ to $F_1$. The composition of $f_{12}$ and $f_{21}$ is a homomorphism from $F_1$ to $F_1$. But this composed homomorphism acts identically on $B_1$, and the identity map on $B_1$ extends uniquely to the identity automorphism on $F_1$. If the composition of $f_{12}$ and $f_{21}$ is the identity automorphism, then they must be invertible, hence they are isomorphisms.
 \end{proof}
 This proof was a little more elegant than the earlier proof that explicitly constructed an isomorphism.
-
 One can now also prove the converse of the previous theorem after proving a few lemmas.
 
 \begin{lem}\label{basis}\cite{halmos}
